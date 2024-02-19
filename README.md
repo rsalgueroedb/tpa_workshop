@@ -90,8 +90,47 @@ $ reboot
 
 ## Run your first cluster
 
+**Create Cluster**
+
 The next step is to create a configuration. TPA does most of the work for you by way of its configure command. All you have to do is supply command-line flags and options to select, in broad terms, what you want to deploy. Here's the tpaexec configure command:
 
 ```
-tpaexec configure demo --architecture M1 --platform docker --postgresql 15 --enable-repmgr --no-git
+tpaexec configure workshop --architecture M1 --platform docker --postgresql 15 --enable-repmgr --no-git
+```
+
+**Provision Cluster**
+
+Now you're ready to create the containers (or virtual machines) on which to run the new deployment. Use the provision command to achieve this:
+
+```tpaexec provision workshop```
+You will see TPA work through the various operations needed to prepare to deploy your configuration.
+
+**Deploy Cluster**
+
+Once the containers are provisioned, you can move on to deployment. Deploying installs, if needed, operating systems and system packages. It then installs the requested Postgres architecture and performs all the needed configuration.
+
+```tpaexec deploy workshop```
+You will see TPA work through the various operations needed to deploy your configuration.
+
+
+**Test Cluster**
+
+You can quickly test your newly deployed configuration using the tpaexec test command. This command runs pgbench on your new database.
+
+```tpaexec test workshop```
+
+## Docker Container Management 
+
+All of the docker containers in a cluster can be started and stopped together using the start-containers and stop-containers commands:
+
+```
+[tpa]$ tpaexec start-containers workshop
+[tpa]$ tpaexec stop-containers workshop
+```
+These commands don't provision or deprovision containers, or even connect to them; they are intended to save resources when you're temporarily not using a docker cluster that you need to keep available for future use.
+
+For a summary of the provisioned docker containers in a cluster, whether started or stopped, use the list-containers command:
+
+```
+[tpa]$ tpaexec list-containers workshop
 ```
